@@ -1,5 +1,13 @@
 .header {
+  position: sticky;
+  top: 0;
   display: flex;
+  justify-content: space-evenly;
+  padding: 10px 0 10px 0;
+  border-bottom: 0.1px solid lightgray;
+  width: 100%;
+  z-index: 555;
+  background-color: white;
 }
 .header_left {
   display: flex;
@@ -7,6 +15,7 @@
 .header_left > img {
   object-fit: contain;
   height: 40px;
+  margin-right: 10px;
 }
 
 .header_search {
@@ -16,10 +25,16 @@
   color: gray;
   height: 22px;
   border-radius: 5px;
+  background-color: #eef3f8;
 }
 
 .header_search > input {
   outline: none;
   background: none;
   border: none;
+}
+
+.header_right {
+  display: flex;
+  align-items: center;
 }
