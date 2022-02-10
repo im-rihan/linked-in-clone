@@ -1,5 +1,5 @@
-import firebase from "firebase";
-import { getFirestore } from "firebase/firestore"
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyDorlTFOSQoFxkjPgRVszLMRlVWNxcafWU",
   authDomain: "linkedin-clone-1c1a6.firebaseapp.com",
@@ -9,9 +9,9 @@ const firebaseConfig = {
   appId: "1:881900584881:web:a29f840b3f6d857010c790",
 };
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 
-const db = firebaseApp.getFirestore();
-const auth = firebase.auth();
+const db = getFirestore(firebaseApp);
+// const auth = firebase.auth();
 
-export { db, auth };
+export { db };

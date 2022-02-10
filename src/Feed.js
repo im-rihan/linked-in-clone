@@ -10,27 +10,39 @@ import "./feed.css";
 import FeedInputOption from "./FeedInputOption";
 import { db } from "./firebase";
 import Post from "./Post";
-import { getFirestore } from "firebase/firestore"
+import { collection, getDocs, getFirestore, addDoc } from "firebase/firestore";
 
 function Feed() {
   const [input, setInput] = useState("");
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    db.collection("posts").onSnapshot((snapshot) =>
-      setPosts(snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() })))
+    const allPost = collection(db, "posts");
+    const postSnapshot = getDocs(allPost);
+    setPosts(
+      postSnapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
     );
+    // db.collection("posts").onSnapshot((snapshot) =>
+    //   setPosts(snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() })))
+    // );
   }, []);
 
   const sendPost = (e) => {
     e.preventDefault();
-    db.collection("posts").add({
+    addDoc({
       name: "Rihan Mohammed",
       description: "This is testing description",
       message: input,
       photoUrl: "",
-      timestamp: firebase.getFirestore().FieldValue.serverTimestamp(),
+      timestamp: getFirestore().FieldValue.serverTimestamp(),
     });
+    // db.collection("posts").add({
+    //   name: "Rihan Mohammed",
+    //   description: "This is testing description",
+    //   message: input,
+    //   photoUrl: "",
+    //   timestamp: firebase.firestore().FieldValue.serverTimestamp(),
+    // });
   };
 
   return (
@@ -39,7 +51,11 @@ function Feed() {
         <div className="feed_input">
           <Create />
           <form>
-            <input onChange={(e) => setInput(e.target.value)} type="text" />
+            <input
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+              type="text"
+            />
             <button onClick={sendPost} type="submit">
               Send
             </button>
@@ -66,6 +82,8 @@ function Feed() {
           photoUrl={photoUrl}
         />;
       })}
+
+      <Post name="rihan" description="hello" message="hello" />
     </div>
   );
 }
