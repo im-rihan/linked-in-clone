@@ -8,41 +8,42 @@ import {
 import React, { useEffect, useState } from "react";
 import "./feed.css";
 import FeedInputOption from "./FeedInputOption";
-import { db } from "./firebase";
 import Post from "./Post";
-import { collection, getDocs, getFirestore, addDoc } from "firebase/firestore";
+import firebase from "firebase";
+import db from "./firebase.js";
+import { useSelector } from "react-redux";
+import { selectUser } from "./features/userSlice";
+import FlipMove from "react-flip-move";
 
 function Feed() {
   const [input, setInput] = useState("");
   const [posts, setPosts] = useState([]);
+  const user = useSelector(selectUser);
 
   useEffect(() => {
-    const allPost = collection(db, "posts");
-    const postSnapshot = getDocs(allPost);
-    setPosts(
-      postSnapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
-    );
-    // db.collection("posts").onSnapshot((snapshot) =>
-    //   setPosts(snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() })))
-    // );
+    db.collection("posts")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setPosts(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+        );
+      });
+    // console.log({ posts });
   }, []);
 
   const sendPost = (e) => {
     e.preventDefault();
-    addDoc({
-      name: "Rihan Mohammed",
-      description: "This is testing description",
+    db.collection("posts").add({
+      name: user.displayName,
+      description: user.email,
       message: input,
-      photoUrl: "",
-      timestamp: getFirestore().FieldValue.serverTimestamp(),
+      photoUrl: user.photoUrl || "",
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
-    // db.collection("posts").add({
-    //   name: "Rihan Mohammed",
-    //   description: "This is testing description",
-    //   message: input,
-    //   photoUrl: "",
-    //   timestamp: firebase.firestore().FieldValue.serverTimestamp(),
-    // });
+    setInput("");
   };
 
   return (
@@ -73,17 +74,19 @@ function Feed() {
         </div>
       </div>
       {/* Posts */}
-      {posts.map(({ id, data: { name, description, message, photoUrl } }) => {
-        <Post
-          key={id}
-          name={name}
-          description={description}
-          message={message}
-          photoUrl={photoUrl}
-        />;
-      })}
-
-      <Post name="rihan" description="hello" message="hello" />
+      <FlipMove>
+        {posts.map(({ id, data: { name, description, message, photoUrl } }) => {
+          return (
+            <Post
+              key={id}
+              name={name}
+              description={description}
+              message={message}
+              photoUrl={photoUrl}
+            />
+          );
+        })}
+      </FlipMove>
     </div>
   );
 }

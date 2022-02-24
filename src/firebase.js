@@ -1,5 +1,9 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+// Import the functions you need from the SDKs you need
+import firebase from "firebase";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDorlTFOSQoFxkjPgRVszLMRlVWNxcafWU",
   authDomain: "linkedin-clone-1c1a6.firebaseapp.com",
@@ -9,9 +13,8 @@ const firebaseConfig = {
   appId: "1:881900584881:web:a29f840b3f6d857010c790",
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
-
-const db = getFirestore(firebaseApp);
-// const auth = firebase.auth();
-
-export { db };
+// Initialize Firebase
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+export const auth = firebase.auth();
+export default db;
